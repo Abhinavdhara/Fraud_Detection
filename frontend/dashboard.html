@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FraudShield Dashboard</title>
+    <link rel="stylesheet" href="./assets/dashboard.css" />
+    <link rel="stylesheet" href="./assets/sidebar.css" />
+
+</head>
+
+<body>
+    <div id="sidebarContainer"></div>
+
+
+    <div class="main">
+        <h1>Transaction Overview</h1>
+
+        <div class="overview">
+            <div class="card">
+                <h3>Total Transactions</h3>
+                <span id="totalTransactions">0</span>
+            </div>
+            <div class="card">
+                <h3>Fraudulent Transactions</h3>
+                <span id="fraudCount">0</span>
+            </div>
+            <div class="card">
+                <h3>Legitimate Transactions</h3>
+                <span id="legitCount">0</span>
+            </div>
+            <div class="card">
+                <h3>Last Transaction</h3>
+                <span id="lastTransaction">-</span>
+            </div>
+            <div class="card">
+                <h3>Current Balance</h3>
+                <span id="hiddenBalance">****</span><br />
+                <button id="showBalanceBtn" class="btn">Show Balance</button>
+            </div>
+        </div>
+
+        <!-- OTP Modal -->
+        <div id="otpModal" class="modal">
+            <div class="modal-content">
+                <span id="closeOtpModal" class="close">&times;</span>
+                <p>Enter OTP:</p>
+                <input type="text" id="otpInput" />
+                <button id="verifyOtpBtn">Verify OTP</button>
+                <p id="otpStatus"></p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="actions">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="quick-actions">
+                <button class="action-card" id="newTransactionBtn">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                    </div>
+                    <span>New Transaction</span>
+                </button>
+        
+                <button class="action-card" id="exportBtn">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M4 6h16M4 12h16M4 18h7" />
+                        </svg>
+                    </div>
+                    <span>Export Report</span>
+                </button>
+        
+                <button class="action-card" id="analyticsBtn">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M4 21v-4M10 21v-10M16 21v-6M22 21v-14" />
+                        </svg>
+                    </div>
+                    <span>View Analytics</span>
+                </button>
+            </div>
+        </div>
+
+        <br>
+       
+        <!-- Recent Transactions Table -->
+        <div class="recent-transactions">
+            <h2 style="display: inline-block;">Recent Transactions</h2>
+            <div style="text-align: right;">
+                <a href="./transactionhistory.html" style="text-decoration: none; color: #007bff; margin-bottom: 5px;">View All</a>
+            </div>
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>With</th>
+                    </tr>
+                </thead>
+                <tbody id="recentTransactionsBody">
+                    <tr>
+                        <td colspan="5">No transactions yet</td>
+                    </tr>
+                </tbody>
+            </table>
+
+                         
+        </div>
+
+        
+    </div>
+
+   
+    <script src="assets/sidebar.js"></script>
+    <script src="assets/dashboard.js"></script>
+</body>
+
+</html>

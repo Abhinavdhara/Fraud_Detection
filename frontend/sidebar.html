@@ -1,0 +1,31 @@
+<div class="sidebar">
+    <div>
+        <h2>FraudShield</h2>
+        <a href="./dashboard.html">Dashboard</a>
+        <a href="./transactionhistory.html">Transaction History</a>
+        <a href="transaction.html">New Transaction</a>
+    </div>
+
+    <!-- Profile Avatar and Logout -->
+    <div class="sidebar-profile">
+        <div class="profile-info">
+            <div class="profile-avatar" id="profileAvatar">U</div>
+            <div>
+                <div class="profile-username" id="profileUsername">Username</div>
+                <div class="profile-role" id="profileRole">user</div>
+            </div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="modal">
+    <div class="profile-modal-content">
+        <span id="closeProfileModal" class="close">&times;</span>
+        <h3>User Profile</h3>
+        <p><strong>Username:</strong> <span id="modalUsername"></span></p>
+        <p><strong>Role:</strong> <span id="modalRole"></span></p>
+    </div>
+</div>
+  

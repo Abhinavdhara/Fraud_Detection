@@ -1,0 +1,92 @@
+/* profile.css */
+
+body.profile-page {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 2rem;
+}
+
+.profile-container {
+    max-width: 600px;
+    background-color: white;
+    margin: auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.avatar {
+    font-size: 5rem;
+    color: #4a5568;
+    /* gray-700 */
+}
+
+.username {
+    margin: 0.5rem 0 0.2rem;
+    font-size: 1.5rem;
+}
+
+.email {
+    color: #718096;
+    /* gray-600 */
+    font-size: 0.95rem;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #2d3748;
+    /* gray-800 */
+}
+
+label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e0;
+    /* gray-300 */
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-top: 0.25rem;
+}
+
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.save-btn {
+    padding: 0.75rem;
+    background-color: #3182ce;
+    /* blue-600 */
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #2b6cb0;
+    /* blue-700 */
+}

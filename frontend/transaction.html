@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Transaction</title>
+    <link rel="stylesheet" href="./assets/transaction.css" />
+    <link rel="stylesheet" href="./assets/sidebar.css" />
+    <script src="https://openfpcdn.io/fingerprintjs/v3"></script>
+
+</head>
+
+<body>
+    <div id="sidebarContainer"></div>
+
+
+    <div class="main">
+        <div class="form-card">
+            <h1 class="title">New Transaction</h1>
+
+            <form id="transactionForm" class="transaction-form">
+                <div class="form-group search-container">
+                    <label for="userSearch">Search User</label>
+                    <input type="text" id="userSearch" class="input" placeholder="Enter name or email" required />
+                    <ul id="userResults" class="dropdown hidden"></ul>
+                </div>
+
+                <label for="transactionType">Transaction Type</label>
+                <select id="transactionType" name="transaction_type" required>
+                    <option value="">Select Type</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="payment">Payment</option>
+                    <option value="bill">Bill</option>
+                    <option value="loan">Loan</option>
+                </select>
+
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" class="input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="input" rows="3"></textarea>
+                </div>
+
+                <div class="form-group hidden" id="secretKeyField">
+                    <label for="secretKey" class="warning-label">Secret Key (Fraudulent transaction)</label>
+                    <input type="password" id="secretKey" class="input warning-border" />
+                </div>                  
+
+                <button type="submit" class="submit-button">Pay</button>
+                <div id="feedback" class="feedback"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/sidebar.js"></script>
+    <script src="assets/transactions.js"></script>
+</body>
+
+
+</html>

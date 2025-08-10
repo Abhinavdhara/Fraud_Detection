@@ -1,0 +1,74 @@
+✅ Phase 1: Frontend – Collect Required Data
+1. Add UI Fields (if not present)
+✅ amount: Already present.
+
+🔽 transaction_type: Add dropdown (<select> with options like transfer, payment).
+
+🌐 geo_lat, geo_lon: Capture via navigator.geolocation.
+
+💻 device_id: Generate/store a local UUID (e.g., via localStorage).
+
+🌐 ip_address: Fetch from external service like https://api.ipify.org?format=json.
+
+2. Include These Fields in /predict Request
+Modify frontend transaction.js to:
+
+Add timestamp (new Date().toISOString()).
+
+Gather geo, device, and IP info on page load or before predict call.
+
+Construct the request payload using all collected fields.
+
+✅ Phase 2: Backend – Enhance Feature Pipeline
+3. Enhance /predict route
+When backend receives the above payload:
+
+Compute derived features:
+
+time_of_day → from timestamp
+
+day_of_week → from timestamp
+
+avg_amount_last_10 → from transaction history in MongoDB
+
+txn_count_last_24h → from transaction history
+
+recipient_diversity → count of unique recipients
+
+is_known_recipient → binary flag
+
+geo_distance_km → compare historical vs current geo_lat/lon
+
+ip_change_flag → compare IP/device with last transaction
+
+4. Call model.predict_proba()
+Use the pre-trained model to:
+
+Compute probability.
+
+Apply threshold (0.3) to determine is_fraud.
+
+✅ Phase 3: Display Fraud Result on Frontend
+5. Frontend Reaction Based on Model Result
+✅ If is_fraud: 0 → show “Fraud Check Passed”.
+
+⚠️ If is_fraud: 1 AND amount < 1000 → show Secret Key override input.
+
+⛔ If is_fraud: 1 AND amount >= 1000 → block and display fraud alert message.
+
+📊 Display score: “Fraud Risk Score: 0.83 (High)” in UI.
+
+✅ Phase 4: Store New Context (Optional)
+6. Store current geo, ip, and device_id
+Append to each transaction.
+
+For IP/device comparison, save last known values to user profile or recent transaction.
+
+Summary of Work Units
+Area	Task
+Frontend	Add dropdown for transaction_type, collect geo/device/IP
+Frontend	Include extra fields in /predict request
+Frontend	Show fraud decision, override UI, fraud score
+Backend	Extract features from payload + DB
+Backend	Predict fraud, apply threshold, return decision + score
+Backend	Optionally store geo/device/IP for comparison
