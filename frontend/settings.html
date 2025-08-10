@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="./assets/settings.css" />
+</head>
+
+<body class="settings-page">
+    <div class="settings-container">
+        <h1 class="settings-title">Settings</h1>
+
+        <!-- Account Settings -->
+        <section class="settings-section">
+            <h2>Account</h2>
+            <label>
+                Username
+                <input type="text" value="john_doe" />
+            </label>
+            <label>
+                Email
+                <input type="email" value="john@example.com" />
+            </label>
+            <label>
+                Change Password
+                <input type="password" placeholder="New password" />
+            </label>
+        </section>
+
+        <!-- Preferences -->
+        <section class="settings-section">
+            <h2>Preferences</h2>
+            <label class="checkbox-group">
+                <input type="checkbox" checked />
+                Enable Email Notifications
+            </label>
+            <label class="checkbox-group">
+                <input type="checkbox" />
+                Dark Mode
+            </label>
+        </section>
+
+        <!-- Secret PIN Update -->
+        <section class="settings-section">
+            <h2>Change Secret PIN</h2>
+            <label>
+                New Secret PIN
+                <input type="password" id="newPin" placeholder="Enter new PIN" />
+            </label>
+            <button type="button" id="requestOtpBtn">Request OTP</button>
+        
+            <div id="otpSection" class="hidden">
+                <label>
+                    Enter OTP
+                    <input type="text" id="otpInput" placeholder="Enter OTP" />
+                </label>
+                <button type="button" id="verifyPinBtn">Verify & Save</button>
+            </div>
+        </section>
+
+
+        <!-- Security -->
+        <section class="settings-section">
+            <h2>Security</h2>
+            <label>
+                Two-Factor Authentication
+                <select>
+                    <option selected>Disabled</option>
+                    <option>Enabled (via Email)</option>
+                    <option>Enabled (via App)</option>
+                </select>
+            </label>
+        </section>
+
+        <!-- Danger Zone -->
+        <section class="settings-section danger-zone">
+            <h2>Danger Zone</h2>
+            <button class="delete-btn">Delete Account</button>
+        </section>
+
+        <button class="save-btn">Save Changes</button>
+    </div>
+</body>
+
+</html>
