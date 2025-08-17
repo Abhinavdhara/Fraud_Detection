@@ -18,7 +18,8 @@ import requests # type: ignore
 from pymongo import MongoClient
 
 # Connect to MongoDB Atlas
-MONGO_URI = "mongodb+srv://devhub2004:2TrLKy9QXxOz4OXV@cluster0.ydkmic5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+import os
+MONGO_URI = os.environ.get('MONGO_URI')
 client = MongoClient(MONGO_URI)
 
 # Use a database (it will be created if it doesn't exist)
@@ -47,9 +48,10 @@ pipeline = joblib.load("model/fraud_detection_pipeline.pkl")
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'fraud.detection.bot@gmail.com' # your sender email
-app.config['MAIL_PASSWORD'] = 'nyiz jhcr jxea nkau'           # app password (not regular password)
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')  # your sender email from environment
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')  # app password from environment
 mail = Mail(app)
+
 
 
 
@@ -128,6 +130,11 @@ def login():
 
 from flask import request, jsonify
 from datetime import datetime
+
+@app.route('/healthz')
+def healthz():
+    return "ok", 200
+
 
 @app.route('/request-login-otp', methods=['POST'])
 def request_login_otp():
