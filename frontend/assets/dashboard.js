@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         statusEl.textContent = "Checking transaction...";
   
         try {
-          const res = await fetch("http://localhost:5000/predict", {
+          const res = await fetch("/predict", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   
     try {
       const [alertsRes, txRes] = await Promise.all([
-        fetch(`http://localhost:5000/alerts?username=${currentUser}`),
-        fetch(`http://localhost:5000/transactions?user=${currentUser}`)
+        fetch(`/alerts?username=${currentUser}`),
+        fetch(`/transactions?user=${currentUser}`)
       ]);
   
       const alertsData = await alertsRes.json();
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!currentUser) return;
   
     try {
-      const res = await fetch(`http://localhost:5000/transactions?user=${currentUser}`);
+      const res = await fetch(`/transactions?user=${currentUser}`);
       const data = await res.json();
       const transactions = data.transactions || [];
   
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         otpStatus.textContent = "Loading...";
   
         try {
-          const res = await fetch("http://localhost:5000/request-otp", {
+          const res = await fetch("/request-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: localStorage.getItem("username") }),
@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
   
         try {
-          const res = await fetch("http://localhost:5000/verify-pin", {
+          const res = await fetch("/verify-pin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: localStorage.getItem("username"), otp }),

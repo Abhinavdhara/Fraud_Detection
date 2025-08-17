@@ -23,7 +23,7 @@ if (!CURRENT_USER) {
 }
 
 // Fetch user list
-fetch("http://127.0.0.1:5000/users")
+fetch("/users")
   .then(res => res.json())
   .then(data => users = data.users || [])
   .catch(err => console.error("User list fetch failed", err));
@@ -139,7 +139,7 @@ transactionForm.addEventListener("submit", async (e) => {
   console.log("📤 Sending payload:", payload);
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/predict", {
+    const res = await fetch("/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -217,7 +217,7 @@ function showFeedback(message, className) {
 
 // Log alerts to backend
 async function logFraudAlert(user, amount, status, details) {
-  await fetch("http://127.0.0.1:5000/log_alert", {
+  await fetch("/log_alert", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

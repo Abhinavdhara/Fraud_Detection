@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         device_id // 👉 send device ID
       };
 
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("username", username);
 
         // 🔐 Trigger OTP email
-        await fetch('http://localhost:5000/request-login-otp', {
+        await fetch('/request-login-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username })
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const username = localStorage.getItem("username");
       const otp = document.getElementById('otpInput').value;
 
-      const res = await fetch('http://localhost:5000/verify-otp', {
+      const res = await fetch('/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, otp })
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, role, pin, email })

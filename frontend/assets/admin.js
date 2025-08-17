@@ -5,7 +5,7 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   const formData = new FormData();
   formData.append("file", fileInput.files[0]);
 
-  const res = await fetch("http://localhost:5000/upload", {
+  const res = await fetch("/upload", {
     method: "POST",
     body: formData
   });
@@ -16,14 +16,14 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
 
 // Train model
 document.getElementById("trainBtn").addEventListener("click", async () => {
-  const res = await fetch("http://localhost:5000/train", { method: "POST" });
+  const res = await fetch("/train", { method: "POST" });
   const result = await res.json();
   document.getElementById("trainStatus").innerText = result.message || "Model training finished.";
 });
 
 // Load fraud alerts
 document.getElementById("loadAlerts").addEventListener("click", async () => {
-  const res = await fetch("http://localhost:5000/alerts");
+  const res = await fetch("/alerts");
   const result = await res.json();
   const tbody = document.querySelector("#alertsTable tbody");
   tbody.innerHTML = "";

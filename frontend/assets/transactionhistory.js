@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Load sidebar profile info
   try {
-    const res = await fetch(`http://127.0.0.1:5000/profile?username=${currentUser}`);
+    const res = await fetch(`/profile?username=${currentUser}`);
     const data = await res.json();
     if (data.success) {
       const { username, role } = data.profile;
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let allTransactions = [];
 
   try {
-    const res = await fetch(`http://localhost:5000/transactions?user=${currentUser}`);
+    const res = await fetch(`/transactions?user=${currentUser}`);
     const data = await res.json();
     allTransactions = data.transactions || [];
     populateMonthOptions(allTransactions);

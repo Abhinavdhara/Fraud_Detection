@@ -1,6 +1,6 @@
 const currentUser = localStorage.getItem("username");
 
-fetch("http://localhost:5000/alerts")
+fetch("/alerts")
   .then((response) => response.json())
   .then((data) => {
     const allAlerts = data.alerts || [];

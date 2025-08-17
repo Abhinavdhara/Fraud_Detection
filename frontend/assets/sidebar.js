@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!currentUser) return;
   
     try {
-      const res = await fetch(`http://localhost:5000/profile?username=${currentUser}`);
+      const res = await fetch(`/profile?username=${currentUser}`);
       const data = await res.json();
       if (data.success) {
         document.getElementById("profileUsername").textContent = data.profile.username;
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!currentUser) return;
   
         try {
-          const res = await fetch(`http://localhost:5000/profile?username=${currentUser}`);
+          const res = await fetch(`/profile?username=${currentUser}`);
           const data = await res.json();
   
           if (data.success) {
