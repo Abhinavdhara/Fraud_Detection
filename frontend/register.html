@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Fraud Detection System</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* Optional enhancement: keeps the message styled nicely */
+        #registerMessage {
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <label for="role">Select Role:</label>
+            <select id="role" name="role" required>
+                <option value="">-- Select --</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+            <!-- Secret PIN input -->
+            <label for="pin">Secret PIN (4-6 digits):</label>
+            <input type="text" id="pin" name="pin" pattern="^\d{4,6}$" required title="Enter a 4 to 6 digit PIN">
+
+            <!-- Email input -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <button type="submit">Register</button>
+
+            <!-- Message moved inside form for better layout -->
+            <div id="registerMessage"></div>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+    <script src="assets/script.js"></script>
+</body>
+
+</html>

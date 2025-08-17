@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Transactions</title>
+    <link rel="stylesheet" href="./assets/transactionhistory.css" />
+    <link rel="stylesheet" href="./assets/sidebar.css" />
+
+</head>
+
+<body>
+    <div id="sidebarContainer"></div>
+
+
+    <div class="main">
+        <h1>All Transactions</h1>
+        <div class="filters-row">
+            <div class="summary-bar" id="summaryBar">
+                <span>Total: <strong id="totalCount">0</strong></span>
+                <span>Credited: <strong id="totalCredit">₹0.00</strong></span>
+                <span>Debited: <strong id="totalDebit">₹0.00</strong></span>
+            </div>
+            <br>
+
+        
+            <div class="filter-controls">
+                <label for="monthFilter">Month:</label>
+                <select id="monthFilter">
+                    <option value="all">All</option>
+                </select>
+        
+                <input type="text" id="searchInput" placeholder="Search by name..." />
+        
+                <button id="clearFiltersBtn">Clear Filters</button>
+            </div>
+            </div>
+
+        
+
+        <div class="recent-transactions">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>With</th>
+                    </tr>
+                </thead>
+                <tbody id="allTransactionsBody">
+                    <tr>
+                        <td colspan="5">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="assets/sidebar.js"></script>
+    <script src="./assets/transactionhistory.js"></script>
+</body>
+
+</html>
