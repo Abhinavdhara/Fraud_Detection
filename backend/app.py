@@ -56,9 +56,7 @@ def send_email(to_email, subject, body):
     if not RESEND_API_KEY:
         raise Exception("RESEND_API_KEY not set")
 
-    # IMPORTANT:
-    # Must send only to your verified email in free tier
-    VERIFIED_EMAIL = "fraudshield.mailer@gmail.com"  # <-- your verified email
+    VERIFIED_EMAIL = "fraudshield.mailer@gmail.com"
 
     response = requests.post(
         "https://api.resend.com/emails",
@@ -68,14 +66,15 @@ def send_email(to_email, subject, body):
         },
         json={
             "from": "onboarding@resend.dev",
-            "to": VERIFIED_EMAIL,  # force sending only to yourself
+            "to": VERIFIED_EMAIL,
             "subject": subject,
             "html": f"<pre>{body}</pre>"
         }
     )
 
-    if response.status_code != 200:
+    if response.status_code not in (200, 202):
         raise Exception(f"Resend failed: {response.text}")
+
 
 # File paths
 USERS_FILE = 'users.json'
