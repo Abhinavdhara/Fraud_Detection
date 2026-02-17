@@ -7,7 +7,6 @@ import pickle
 import random
 from random import randint
 from datetime import datetime, timedelta
-from flask_mail import Mail, Message
 from flask import request, jsonify
 from datetime import datetime, timedelta, timezone
 import pandas as pd
@@ -18,7 +17,24 @@ import requests # type: ignore
 from pymongo import MongoClient
 
 # Connect to MongoDB Atlas
-import os
+
+def send_email(to_email, subject, body):
+    response = requests.post(
+        "https://api.resend.com/emails",
+        headers={
+            "Authorization": f"Bearer {os.environ.get('RESEND_API_KEY')}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "from": "onboarding@resend.dev",  # free test sender
+            "to": [to_email],
+            "subject": subject,
+            "text": body,
+        },
+    )
+    return response.status_code
+
+
 MONGO_URI = os.environ.get('MONGO_URI')
 client = MongoClient(MONGO_URI)
 
@@ -45,12 +61,7 @@ MODEL_FILE = './model/fraud_detection_pipeline.pkl'
 import joblib
 pipeline = joblib.load("model/fraud_detection_pipeline.pkl")
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')  # your sender email from environment
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')  # app password from environment
-mail = Mail(app)
+
 
 
 
@@ -63,7 +74,6 @@ otp_store = {}  # In-memory OTP store
 
 #----------------V-02 EDIT START------------------
 # MongoDB connection setup (move this to top-level if not already done)
-MONGO_URI = "mongodb+srv://devhub2004:2TrLKy9QXxOz4OXV@cluster0.ydkmic5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(MONGO_URI)
 db = client["fraudshield"]
 users_col = db["users"]
