@@ -11,7 +11,7 @@ from flask import request, jsonify
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 import requests # type: ignore
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 
 
 
@@ -51,19 +51,31 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
 mail = Mail(app)
 
 def send_email(to_email, subject, body):
-    try:
-        print("📧 Attempting to send email...")
-        msg = Message(
-            subject=subject,
-            recipients=[to_email],
-            body=body
-        )
-        mail.send(msg)
-        print("✅ Email sent successfully")
-    except Exception as e:
-        print("❌ SMTP ERROR:", str(e))
-        raise
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 
+    if not RESEND_API_KEY:
+        raise Exception("RESEND_API_KEY not set")
+
+    # IMPORTANT:
+    # Must send only to your verified email in free tier
+    VERIFIED_EMAIL = "fraudshield.mailer@gmail.com"  # <-- your verified email
+
+    response = requests.post(
+        "https://api.resend.com/emails",
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "from": "onboarding@resend.dev",
+            "to": VERIFIED_EMAIL,  # force sending only to yourself
+            "subject": subject,
+            "html": f"<pre>{body}</pre>"
+        }
+    )
+
+    if response.status_code != 200:
+        raise Exception(f"Resend failed: {response.text}")
 
 # File paths
 USERS_FILE = 'users.json'
