@@ -471,7 +471,7 @@ def predict():
                     )
                 else:
                     print("⚠ BASE_URL not set, skipping device alert")
-                }")
+                
 
             except Exception as e:
                 print(f"❌ Failed to send device alert: {e}")
