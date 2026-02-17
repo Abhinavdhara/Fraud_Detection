@@ -32,6 +32,9 @@ def send_email(to_email, subject, body):
             "text": body,
         },
     )
+    if response.status_code >= 400:
+        raise Exception(f"Email failed: {response.text}")
+
     return response.status_code
 
 
@@ -74,7 +77,7 @@ otp_store = {}  # In-memory OTP store
 
 #----------------V-02 EDIT START------------------
 # MongoDB connection setup (move this to top-level if not already done)
-client = MongoClient(MONGO_URI)
+
 db = client["fraudshield"]
 users_col = db["users"]
 alerts_col = db["alerts"]
@@ -171,20 +174,25 @@ def request_login_otp():
         {"$set": {"otp": otp, "expires_at": expires_at}},
         upsert=True
     )
-
+    
     try:
-        msg = Message(
-            subject="Login OTP Verification - Fraud Detection App",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email],
-            body=f"Hi {username},\n\nHere is your OTP to verify your login after a suspicious attempt:\n\n🔐 OTP: {otp}\n\nThis OTP will expire in 5 minutes.\n\nIf this wasn't you, please take action immediately.\n\n— Fraud Detection System"
-        )
-        mail.send(msg)
-        print(f"✅ Login OTP sent to {email}")
+        send_email(
+            email,
+            "Login OTP Verification - Fraud Detection App",
+            f"""Hi {username},
+        
+            Your OTP is: {otp}
+            
+            This OTP will expire in 5 minutes.
+            
+            — Fraud Detection System"""
+            )
         return jsonify(success=True, message="OTP sent via email.")
+
     except Exception as e:
-        print(f"❌ Email sending failed: {e}")
+        print("❌ Email sending failed:", e)
         return jsonify(success=False, message="Failed to send email."), 500
+
 
 
 @app.route('/verify-otp', methods=['POST'])
@@ -447,26 +455,32 @@ def predict():
                 {"username": sender},
                 {"$addToSet": {"temp_blocked_devices": device_id}}
             )
-
             try:
-                requests.post("http://localhost:5000/send-device-alert", json={
-                    "username": sender,
-                    "device_id": device_id,
-                    "ip_address": ip_address,
-                    "geo_lat": geo_lat,
-                    "geo_lon": geo_lon
-                })
+                BASE_URL = os.environ.get("BASE_URL")
+                
+                requests.post(
+                    f"{BASE_URL}/send-device-alert",
+                    json={
+                        "username": sender,
+                        "device_id": device_id,
+                        "ip_address": ip_address,
+                        "geo_lat": geo_lat,
+                        "geo_lon": geo_lon
+                    }
+                )
+                
                 print(f"📧 Device alert sent for {device_id}")
+
             except Exception as e:
                 print(f"❌ Failed to send device alert: {e}")
 
-        # 🔁 Always return after blocking
-        return jsonify({
-            "is_fraud": is_fraud,
-            "probability": round(proba, 4),
-            "allowed": False,
-            "message": "Transaction blocked due to fraud risk"
-        }), 200
+            # 🔁 Always return after blocking
+            return jsonify({
+                "is_fraud": is_fraud,
+                "probability": round(proba, 4),
+                "allowed": False,
+                "message": "Transaction blocked due to fraud risk"
+            }), 200
 
 
     # ✅ Legitimate transaction: update balances and store transaction
@@ -558,13 +572,18 @@ def request_otp():
     otp_store[username] = {'otp': otp, 'new_pin': new_pin, 'expires_at': expires}
 
     try:
-        msg = Message(
-            subject="Your OTP for PIN Change",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[user_email],
-            body=f"Hi {username},\n\nYour OTP for changing PIN is: {otp}\n\nThis OTP is valid for 5 minutes.\n\n- Fraud Detection App"
-        )
-        mail.send(msg)
+        send_email(
+    user_email,
+    "Your OTP for PIN Change",
+    f"""Hi {username},
+
+Your OTP for changing PIN is: {otp}
+
+Valid for 5 minutes.
+
+— Fraud Detection App"""
+)
+
         print(f"✅ OTP sent to {user_email}")
         return jsonify(success=True, message='OTP sent via email')
     except Exception as e:
@@ -671,30 +690,39 @@ def send_device_alert():
     if not user_email:
         return jsonify(success=False, message="User email not set."), 400
 
-    confirm_url = f"http://localhost:5000/confirm-device?username={username}&device_id={device_id}"
-    block_url = f"http://localhost:5000/block-device?username={username}&device_id={device_id}&ip={ip_address}&lat={geo_lat}&lon={geo_lon}"
+    # 🔥 Use Render base URL instead of localhost
+    BASE_URL = os.environ.get("BASE_URL")
 
-    msg = Message(
-        subject="Fraud Alert: Unrecognized Device Attempt",
-        sender=app.config['MAIL_USERNAME'],
-        recipients=[user_email],
-        body=f"""
-Hi {username},
+    confirm_url = f"{BASE_URL}/confirm-device?username={username}&device_id={device_id}"
+    block_url = f"{BASE_URL}/block-device?username={username}&device_id={device_id}&ip={ip_address}&lat={geo_lat}&lon={geo_lon}"
+
+    try:
+        send_email(
+            user_email,
+            "Fraud Alert: Unrecognized Device Attempt",
+            f"""Hi {username},
 
 A suspicious login or transaction attempt was blocked.
 
 Device ID: {device_id}
-IP: {ip_address}
+IP Address: {ip_address}
 Location: ({geo_lat}, {geo_lon})
 
-✅ If this was you, click here: {confirm_url}
-❌ If this was NOT you, click here to block the device: {block_url}
+If this was you, confirm here:
+{confirm_url}
 
-- Fraud Detection System
-        """
-    )
-    mail.send(msg)
-    return jsonify(success=True, message="Alert email sent.")
+If this was NOT you, block the device here:
+{block_url}
+
+— Fraud Detection System"""
+        )
+
+        print(f"Device alert email sent to {user_email}")
+        return jsonify(success=True, message="Alert email sent.")
+
+    except Exception as e:
+        print("Failed to send device alert:", e)
+        return jsonify(success=False, message="Failed to send alert email."), 500
 
 @app.route('/confirm-device')
 def confirm_device():
@@ -704,7 +732,7 @@ def confirm_device():
     if not username or not device_id:
         return "Invalid request. Missing username or device ID.", 400
 
-    # ✅ Remove from both temp and permanent block lists (just in case)
+    # Remove from both temp and permanent block lists (just in case)
     users_col.update_one(
         {"username": username},
         {
@@ -715,7 +743,7 @@ def confirm_device():
         }
     )
 
-    return "✅ Device confirmed and unblocked. You may now log in from this device."
+    return "Device confirmed and unblocked. You may now log in from this device."
 
 
 @app.route('/block-device', methods=['GET', 'POST'])
