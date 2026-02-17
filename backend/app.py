@@ -51,13 +51,18 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
 mail = Mail(app)
 
 def send_email(to_email, subject, body):
-    msg = Message(
-        subject=subject,
-        recipients=[to_email],
-        body=body
-    )
-    mail.send(msg)
-
+    try:
+        print("📧 Attempting to send email...")
+        msg = Message(
+            subject=subject,
+            recipients=[to_email],
+            body=body
+        )
+        mail.send(msg)
+        print("✅ Email sent successfully")
+    except Exception as e:
+        print("❌ SMTP ERROR:", str(e))
+        raise
 
 
 # File paths
