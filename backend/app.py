@@ -11,6 +11,10 @@ from flask import request, jsonify
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 import requests # type: ignore
+from flask_mail import Mail, Message
+
+
+
 
 
 # V-02 EDIT start-------------------------------------
@@ -18,24 +22,7 @@ from pymongo import MongoClient
 
 # Connect to MongoDB Atlas
 
-def send_email(to_email, subject, body):
-    response = requests.post(
-        "https://api.resend.com/emails",
-        headers={
-            "Authorization": f"Bearer {os.environ.get('RESEND_API_KEY')}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "from": "onboarding@resend.dev",  # free test sender
-            "to": [to_email],
-            "subject": subject,
-            "text": body,
-        },
-    )
-    if response.status_code >= 400:
-        raise Exception(f"Email failed: {response.text}")
 
-    return response.status_code
 
 
 MONGO_URI = os.environ.get('MONGO_URI')
@@ -54,6 +41,24 @@ otp_col = db["otp"]
 
 app = Flask(__name__, static_folder='../frontend/assets', static_url_path='/assets')
 CORS(app)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+
+mail = Mail(app)
+
+def send_email(to_email, subject, body):
+    msg = Message(
+        subject=subject,
+        recipients=[to_email],
+        body=body
+    )
+    mail.send(msg)
+
+
 
 # File paths
 USERS_FILE = 'users.json'
