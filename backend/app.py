@@ -457,19 +457,21 @@ def predict():
             )
             try:
                 BASE_URL = os.environ.get("BASE_URL")
-                
-                requests.post(
-                    f"{BASE_URL}/send-device-alert",
-                    json={
-                        "username": sender,
-                        "device_id": device_id,
-                        "ip_address": ip_address,
-                        "geo_lat": geo_lat,
-                        "geo_lon": geo_lon
-                    }
-                )
-                
-                print(f"📧 Device alert sent for {device_id}")
+
+                if BASE_URL:
+                    requests.post(
+                        f"{BASE_URL}/send-device-alert",
+                        json={
+                            "username": sender,
+                            "device_id": device_id,
+                            "ip_address": ip_address,
+                            "geo_lat": geo_lat,
+                            "geo_lon": geo_lon
+                        }
+                    )
+                else:
+                    print("⚠ BASE_URL not set, skipping device alert")
+                }")
 
             except Exception as e:
                 print(f"❌ Failed to send device alert: {e}")
